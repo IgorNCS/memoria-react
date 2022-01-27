@@ -11,16 +11,41 @@ export default function MemoryGame() {
 
     useEffect(()=>{
         setCards(game.createCardsFromTechs())
-    })
+    },[])
 
 
     function restart() {
+        game.clearCards();
+        setCards(game.createCardsFromTechs())
         setGameOver(false);
+    }
+    
+    function handleFlip(card) {
+        if (game.setCard(card.id)) {
+            if (game.secondCard) {
+                if (game.checkMatch()) {
+                    game.clearCards();
+                    if (game.checkGameOver()) {
+                        //game over
+                        setGameOver(true);
+                    }
+                } else {
+                    setTimeout(() => {
+                        //No match
+                        game.unflipCards();
+                        setCards([...game.cards])
+                    }, 1000);
+    
+                };
+            }
+        }
+        setCards([...game.cards]);
+        console.log("atra")
     }
 
     return(
     <div>
-        <GameBoard cards={cards}></GameBoard>
+        <GameBoard handleFlip={handleFlip} cards={cards}></GameBoard>
         <GameOver show={gameOver} handleRestart={restart}></GameOver>
     </div>
     )
