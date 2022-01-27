@@ -21,26 +21,12 @@ export default function MemoryGame() {
     }
     
     function handleFlip(card) {
-        if (game.setCard(card.id)) {
-            if (game.secondCard) {
-                if (game.checkMatch()) {
-                    game.clearCards();
-                    if (game.checkGameOver()) {
-                        //game over
-                        setGameOver(true);
-                    }
-                } else {
-                    setTimeout(() => {
-                        //No match
-                        game.unflipCards();
-                        setCards([...game.cards])
-                    }, 1000);
-    
-                };
-            }
-        }
+        game.flipCard(card.id,()=>{
+            setGameOver(true); //GameOverCallBack
+        },()=>{
+            setCards([...game.cards]) //NoMatchCallback
+        })
         setCards([...game.cards]);
-        console.log("atra")
     }
 
     return(
